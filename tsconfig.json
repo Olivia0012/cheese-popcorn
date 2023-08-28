@@ -20,6 +20,6 @@
     "jsx": "react",
     "baseUrl": "./src"
   },
-  "include": ["**/*.ts", "**/*.tsx", "./custom.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "./custom.d.ts", "src/components/MovieSearchFun.jsx"],
   "exclude": ["node_modules"]
 }
