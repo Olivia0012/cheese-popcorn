@@ -5,7 +5,7 @@ import MovieSearchView from '../../views/MovieSearchView';
 import 'jest-enzyme';
 import { waitForAct } from '@noshot/utils';
 import mockMatchMedia from '../setupTests';
-import { mockData, mockErrorData } from '../mockData/mockData';
+import { mockData } from '../mockData/mockData';
 
 configure({ adapter: new Adapter() });
 describe('Search movie page display test', () => {
