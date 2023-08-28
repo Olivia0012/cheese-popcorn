@@ -12,6 +12,7 @@ const MovieList = ({ movies, error, loading }) => {
 			title: 'Title',
 			dataIndex: 'Title',
 			key: 'Title',
+			width: '40%',
 			render: (_, record) => <a onClick={() => onClick(record.imdbID)}>{record.Title}</a>
 		},
 		{
