@@ -1,9 +1,10 @@
 import React from 'react';
+import MovieSearchView from './views/MovieSearchView';
 
 export default function App() {
   return (
     <main>
-      <div>Hello world!</div>
+      <MovieSearchView />
     </main>
   );
 }
