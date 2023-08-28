@@ -51,6 +51,7 @@ export default class MovieSearchView extends React.Component {
 					}
 					this.setState({
 						movies: movies,
+						error: null,
 						loading: false
 					});
 				}
