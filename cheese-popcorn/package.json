@@ -2,8 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "node --openssl-legacy-provider ./node_modules/.bin/next build",
+    "start": "node --openssl-legacy-provider ./node_modules/.bin/next start",
     "test": "jest --watch",
     "test:ci": "jest --ci"
   },
