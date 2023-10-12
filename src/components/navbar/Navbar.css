@@ -1,0 +1,41 @@
+.cp-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: #e5cff7;
+  height: 50px;
+  background-color: #713abe;
+  border-radius: 0 0 10px 10px;
+}
+
+.cp-logo {
+  margin-left: 10px;
+}
+
+.cp-search {
+  background-color: #e5cff774;
+  width: 50%;
+  border-radius: 5px;
+  border: none;
+  height: 60%;
+  font-size: medium;
+  color: #5b0888;
+}
+
+.cp-search:focus {
+  outline: none;
+  font-size: medium;
+}
+
+.cp-search:focus {
+  background-color: #e5cff774;
+  width: 50%;
+  border-radius: 5px;
+  border: none;
+}
+
+.cp-result-num {
+  margin-right: 10px;
+  font-weight: 600;
+}

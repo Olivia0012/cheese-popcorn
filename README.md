@@ -4,7 +4,7 @@ This project is a single-page web application - that allows a user to enter crit
 
 Clicking on a title should bring up a detailed view of the title - plot, cast, etc.
 
-![Static Badge](https://img.shields.io/badge/coverage-100%-ligreen)
+![Static Badge](https://img.shields.io/badge/coverage-100%-lightgreen)
 ![Static Badge](https://img.shields.io/badge/npm_package-9.8.1-blue)
 ![example workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 
