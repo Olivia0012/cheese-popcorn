@@ -1,26 +1,41 @@
-# getflix
-Users can search movies through title, year, plot and type. Title filed cannot be empty for each search, plot is 'Full' by default. The matched movies will be display in the screen with thier title, poster and the released year.
+# Cheese Popcorn ![Static Badge](https://img.shields.io/badge/cheese_popcorn-v1.0.0-orange)
 
-User can click on a title which will bring up a detailed view of the title - director, actors, plot, cast, etc.  
+This project is a single-page web application - that allows a user to enter criteria into search input in the navbar and display matching titles on the page. For each fetched data, show the title, the poster, and year it released.
 
-## How to run
-```
-npm install  // install all the required dependencies
-npm start    // start the app
-```
+Clicking on a title should bring up a detailed view of the title - plot, cast, etc.
 
-## How to run test
-```
-npm run test
-```
-Or 
-```
-npm test -- --coverage  // run test with coverage
-```
+![Static Badge](https://img.shields.io/badge/coverage-100%-ligreen)
+![Static Badge](https://img.shields.io/badge/npm_package-9.8.1-blue)
+![example workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
 ## Copyright and Licensing
 
-Copyright 2023 Tyro Payments Limited
+Copyright 2023 Lu Wang
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 License. You may obtain a copy of the License at

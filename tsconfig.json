@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "rootDir": "src",
+    "outDir": "build",
     "lib": [
       "dom",
-      "dom.iterable"
+      "esnext"
     ],
-    "allowJs": true,
+    "target": "es5",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -16,10 +17,22 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false,
-    "jsx": "react",
-    "baseUrl": "./src"
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "jsx": "react-jsx"
   },
-  "include": ["**/*.ts", "**/*.tsx", "./custom.d.ts", "src/components/MovieSearchFun.jsx"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "build",
+    "coverage",
+    "webpack.*.js",
+    "*.config.js",
+    "*.test.ts*"
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }
