@@ -4,13 +4,13 @@ This project is a single-page web application - that allows a user to enter crit
 
 Clicking on a title should bring up a detailed view of the title - plot, cast, etc.
 
-![Static Badge](https://img.shields.io/badge/coverage-100%-green)
+![Static Badge](https://img.shields.io/badge/coverage-100%-blue)
 ![Static Badge](https://img.shields.io/badge/npm_package-9.8.1-blue)
 ![example workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 
 ## Product
 
-https://cheese-popcorn-5meux1sx0-lu-wangs-projects.vercel.app/
+https://cheese-popcorn.vercel.app/
 
 ## Available Scripts
 
