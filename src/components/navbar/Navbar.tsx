@@ -1,9 +1,14 @@
 import { FC } from 'react'
+import './Navbar.css'
 
-const Navbar: FC = () => {
+interface NavbarProps {
+    children: React.ReactNode
+}
+
+const Navbar: FC<NavbarProps> = ({ children }) => {
     return (
-        <div>
-            Hello from NavBar
+        <div className='cp-nav'>
+            {children}
         </div>
     )
 }
