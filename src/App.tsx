@@ -31,11 +31,7 @@ function App() {
         return;
       }
 
-      const res = await fetch(`http://www.omdbapi.com/?apikey=7ad09941&s=${query}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
-      });
+      const res = await fetch(`http://www.omdbapi.com/?apikey=7ad09941&s=${query}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -72,11 +68,7 @@ function App() {
       setMovieError('');
       setIsMovieLoading(true);
 
-      const res = await fetch(`http://www.omdbapi.com/?apikey=7ad09941&i=${movieId}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
-      });
+      const res = await fetch(`http://www.omdbapi.com/?apikey=7ad09941&i=${movieId}`);
       const data = await res.json();
 
       if (!res.ok) {
