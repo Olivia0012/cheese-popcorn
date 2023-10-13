@@ -1,0 +1,9 @@
+.cp-movie-main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 5px;
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 6%;
+}

@@ -7,6 +7,10 @@
   height: 50px;
   background-color: #713abe;
   border-radius: 0 0 10px 10px;
+  box-shadow: 10px 5px 5px #9d76c1;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
 }
 
 .cp-logo {
@@ -14,25 +18,50 @@
 }
 
 .cp-search {
+  display: flex;
+  align-items: center;
+  height: 70%;
+  justify-content: center;
+  width: 60%;
+  gap: 10px;
+}
+
+.cp-search-input {
   background-color: #e5cff774;
   width: 50%;
   border-radius: 5px;
   border: none;
-  height: 60%;
+  height: 80%;
   font-size: medium;
   color: #5b0888;
 }
 
-.cp-search:focus {
+.cp-search-input:focus {
   outline: none;
   font-size: medium;
 }
 
-.cp-search:focus {
+.cp-search-input:focus {
   background-color: #e5cff774;
   width: 50%;
   border-radius: 5px;
   border: none;
+}
+
+.cp-search-button {
+  background-color: #713abe;
+  border-radius: 5px;
+  border: 1px solid #e5cff7;
+  color: #e5cff7;
+  height: 90%;
+}
+
+.cp-search-button:hover {
+  background-color: #e5cff7;
+  border-radius: 5px;
+  border: 1px solid #e5cff7;
+  color: #713abe;
+  height: 90%;
 }
 
 .cp-result-num {
