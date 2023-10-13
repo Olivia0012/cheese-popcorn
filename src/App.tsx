@@ -31,7 +31,7 @@ function App() {
         return;
       }
 
-      const res = await fetch(`http://www.omdbapi.com/?apikey=320f6ab2&s=${query}`, {
+      const res = await fetch(`http://www.omdbapi.com/?apikey=7ad09941&s=${query}`, {
         headers: {
           'Access-Control-Allow-Origin': '*'
         }
@@ -72,7 +72,7 @@ function App() {
       setMovieError('');
       setIsMovieLoading(true);
 
-      const res = await fetch(`http://www.omdbapi.com/?apikey=320f6ab2&i=${movieId}`, {
+      const res = await fetch(`http://www.omdbapi.com/?apikey=7ad09941&i=${movieId}`, {
         headers: {
           'Access-Control-Allow-Origin': '*'
         }
