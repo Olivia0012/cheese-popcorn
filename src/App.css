@@ -7,3 +7,9 @@
   margin: 0 auto;
   padding-top: 60px;
 }
+
+@media only screen and (max-width: 769px) {
+  .cp-movie-main-container {
+    display: block;
+  }
+}

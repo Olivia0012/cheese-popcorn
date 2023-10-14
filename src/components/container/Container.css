@@ -14,6 +14,56 @@
   height: fit-content;
 }
 
+.cp-movie-list-header {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: space-between;
+  color: #e0d5ed;
+  height: 40px;
+}
+
+.cp-movie-list-page-input {
+  width: 20px;
+}
+
+.cp-movie-list-page {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-left: 40%;
+}
+
+.cp-movie-list-page-input {
+  background-color: #e5cff774;
+  width: 20px;
+  border-radius: 3px;
+  border: none;
+  height: 80%;
+  font-size: medium;
+  color: #5b0888;
+}
+
+.cp-movie-list-page-input:focus {
+  outline: none;
+  font-size: medium;
+}
+
+.cp-button-page {
+  border-radius: 50%;
+  color: #5b0888;
+  font-size: large;
+  border: 1px solid #5b0888;
+  background-color: transparent;
+}
+
+.cp-button-page:hover {
+  color: #e0d5ed;
+  background-color: #5b0888;
+}
+
 .cp-movie-box {
   display: flex;
   flex-direction: column;

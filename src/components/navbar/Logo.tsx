@@ -2,7 +2,7 @@
 const Logo = () => {
     return (
         <div className="cp-logo">
-            <h2>Cheese Popcorn 🍿</h2>
+            <h2><span className="cp-logo-title">Cheese Popcorn</span> 🍿</h2>
         </div>
     )
 }

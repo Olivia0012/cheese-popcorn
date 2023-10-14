@@ -1,7 +1,7 @@
 import React from 'react'
 import './Watched.css'
 import Button from '../../button/Button';
-import { IWatched } from '../../../model/IMovie';
+import { ActiveType, IWatched } from '../../../model/IMovie';
 import Message from '../error/ErrorMessage';
 
 function average(nums: number[]) {
@@ -17,9 +17,15 @@ interface WatchedProps {
     watched: IWatched[];
     setWatched: React.Dispatch<React.SetStateAction<IWatched[]>>;
     setSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
+    setActive: React.Dispatch<React.SetStateAction<ActiveType>>;
 }
 
-const Watched: React.FC<WatchedProps> = ({ watched, setWatched, setSelectedId }) => {
+const Watched: React.FC<WatchedProps> = ({
+    watched,
+    setWatched,
+    setSelectedId,
+    setActive
+}) => {
     const avgRating = average(watched.map((el) => Number(el.rating))).toFixed(1);
     const avgIMDBRating = average(watched.map((el) => Number(el.rating))).toFixed(1);
     const avgRuntime = average(watched.map((el) => Number(el.runtime))).toFixed(0);
@@ -32,13 +38,17 @@ const Watched: React.FC<WatchedProps> = ({ watched, setWatched, setSelectedId })
     return (
         <>
             <div className='cp-watched-header'>
-                <h3>MOVIES WATCHED</h3>
+                <div className='cp-watched-header-title'>
+                    <h3>MOVIES WATCHED </h3>
+                    <Button className='cp-button-back' text={'-'} onClick={(e) => { e?.stopPropagation(); setActive('list') }} />
+                </div>
                 <div className='cp-watched-summary'>
                     <p><span>#️⃣ </span>{watchedNum} movies</p>
                     <p><span>⭐️  </span>{avgRating}</p>
                     <p><span>🌟  </span>{avgIMDBRating}</p>
                     <p><span>⏱ </span>{avgRuntime} movies</p>
                 </div>
+
             </div>
             <div className='cp-watched-container'>
                 {watched.length === 0 && <Message message={`No watched movie yet, please rate a movie.`} className='cp-no-watched-message' />}

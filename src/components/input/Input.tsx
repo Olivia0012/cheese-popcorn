@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 interface InputProps {
     className?: string;
-    query: string;
+    query?: string;
     setQuery: (e: string) => void;
 }
 

@@ -34,3 +34,5 @@ export interface IWatched {
   title: string;
   imdbID: string;
 }
+
+export type ActiveType = 'watched' | 'list' | 'detail';

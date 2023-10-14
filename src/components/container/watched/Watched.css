@@ -18,6 +18,14 @@
   color: #e0d5ed;
 }
 
+.cp-watched-header-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+}
+
 .cp-watched-container {
   color: #e0d5ed;
   width: 100%;

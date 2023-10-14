@@ -1,0 +1,13 @@
+.cp-button-back {
+  border-radius: 50%;
+  border: 2px solid #5b0888;
+  background-color: #5b0888;
+  color: #c9b9d8;
+  font-size: small;
+}
+
+.cp-button-back:hover {
+  background-color: #c9b9d8;
+  color: #5b0888;
+  border: 2px solid #5b088800;
+}

@@ -8,7 +8,7 @@ import Search from './components/navbar/Search';
 import Footer from './components/footer/Footer';
 import Container from './components/container/Container';
 import MovieDetail from './components/container/detail/MovieDetail';
-import { IMovie, IWatched } from './model/IMovie';
+import { ActiveType, IMovie, IWatched } from './model/IMovie';
 import Watched from './components/container/watched/Watched';
 
 function App() {
@@ -21,10 +21,14 @@ function App() {
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [movie, setMovie] = useState<IMovie | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [page, setPage] = useState('1');
   const [watched, setWatched] = useState<IWatched[]>(() => {
     const localWatched = localStorage.getItem('watched');
     return localWatched ? JSON.parse(localWatched) : [];
   });
+
+  const [active, setActive] = useState<ActiveType>('list');
+
 
   const fetchMovies = async () => {
     try {
@@ -36,7 +40,7 @@ function App() {
         return;
       }
 
-      const res = await fetch(`https://www.omdbapi.com/?apikey=7ad09941&s=${query}`);
+      const res = await fetch(`https://www.omdbapi.com/?apikey=7ad09941&s=${query}&page=${page}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -85,6 +89,7 @@ function App() {
 
   const handleClick = (): void => {
     fetchMovies();
+    setActive('list')
   }
 
   const handleClickMovie = (movie: IMovie): void => {
@@ -93,24 +98,47 @@ function App() {
 
   const handleCloseMovieDetail = () => {
     setMovie(null);
+    setActive('watched')
   }
 
   useEffect(() => {
     fetchMovies();
+    setActive('list')
   }, [])
 
   useEffect(() => {
-    handleCloseMovieDetail();
+    setMovie(null);
   }, [query])
 
   useEffect(() => {
     if (!selectedId) return;
     fetchMovie(selectedId);
+    setActive('detail')
   }, [selectedId])
 
   useEffect(() => {
     localStorage.setItem('watched', JSON.stringify(watched))
   }, [watched])
+
+  const useWindowWide = () => {
+    const [width, setWidth] = useState(0)
+
+    useEffect(() => {
+      function handleResize() {
+        setWidth(window.innerWidth)
+      }
+
+      window.addEventListener("resize", handleResize)
+
+      handleResize()
+
+      return () => {
+        window.removeEventListener("resize", handleResize)
+      }
+    }, [setWidth])
+
+    return width
+  }
 
   return (
     <div className="App">
@@ -122,10 +150,10 @@ function App() {
 
       <div className='cp-movie-main-container'>
         <Container type={'list'} height={movies.length} error={error} isLoading={isLoading} >
-          <MovieList movies={movies} key={query} onClick={handleClickMovie} />
+          {(useWindowWide() > 800 || active === 'list') && < MovieList movies={movies} key={query} onClick={handleClickMovie} setActive={setActive} setPage={setPage} page={page} resultNum={resultNum} />}
         </Container>
         <Container type={'detail'} error={movieError} isLoading={isMovieLoading}>
-          {!movie && <Watched watched={watched} setWatched={setWatched} setSelectedId={setSelectedId} />}
+          {!movie && active === 'watched' && <Watched watched={watched} setWatched={setWatched} setSelectedId={setSelectedId} setActive={setActive} />}
           {movie && <MovieDetail movie={movie} onClose={handleCloseMovieDetail} watched={watched} setWatched={setWatched} />}
         </Container>
       </div>
