@@ -1,9 +1,34 @@
-import { IMovie } from '../../../model/IMovie'
+import { IMovie, IWatched } from '../../../model/IMovie'
 import StarRating from '../../rating/StarRating'
 import { BiArrowBack } from 'react-icons/bi'
 import './MovieDetail.css'
+import Button from '../../button/Button'
+import { useState } from 'react'
+import Message from '../error/ErrorMessage'
 
-const MovieDetail = ({ movie, onClose }: { movie: IMovie, onClose: () => void }) => {
+interface MovieDetailProps {
+    movie: IMovie;
+    watched: IWatched[];
+    setWatched: React.Dispatch<React.SetStateAction<IWatched[]>>;
+    onClose: () => void;
+}
+
+const MovieDetail: React.FC<MovieDetailProps> = ({ movie, onClose, watched, setWatched }) => {
+    const [rating, setRating] = useState(0);
+    const hasWatched = watched.find(watchedMovied => movie.imdbID === watchedMovied.imdbID);
+
+    const handleAddWatched = () => {
+        const newWatch: IWatched = {
+            title: movie.Title,
+            rating: rating,
+            runtime: Number(movie.Runtime?.split(' ')[0]),
+            poster: movie.Poster,
+            imdbRating: Number(movie.imdbRating),
+            imdbID: movie.imdbID
+        };
+
+        setWatched([...watched, newWatch])
+    }
     return (
         <div className="cp-movie-detail-container">
             <header>
@@ -20,7 +45,9 @@ const MovieDetail = ({ movie, onClose }: { movie: IMovie, onClose: () => void })
                 </div>
             </header>
             <div className='cp-movie-rating-box'>
-                <StarRating maxRating={10} className='cp-movie-detail-rating' initialRating={Number(movie.imdbRating)} />
+                <StarRating maxRating={10} className='cp-movie-detail-rating' initialRating={hasWatched?.rating} rating={rating} setRating={setRating} />
+                {!hasWatched && <Button text={'+ ADD TO WATCHED'} onClick={handleAddWatched} className='cp-movie-detail-add-watched' />}
+                {hasWatched && <Message message={'You have watched this movie.'} />}
             </div>
             <section>
                 <p><em>{movie.Plot}</em></p>
@@ -47,4 +74,5 @@ const MovieDetail = ({ movie, onClose }: { movie: IMovie, onClose: () => void })
     )
 }
 
-export default MovieDetail
+export default MovieDetail;
+

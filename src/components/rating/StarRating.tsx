@@ -1,24 +1,32 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 
 interface StarRatingProps {
     initialRating?: number;
-    maxRating: number,
-    className: string
+    maxRating: number;
+    className: string;
+    rating: number;
+    setRating: Dispatch<SetStateAction<number>>;
 }
 
 const StarRating: React.FC<StarRatingProps> = ({
     maxRating = 5,
-    initialRating = 3,
-    className
+    initialRating = 0,
+    className,
+    rating,
+    setRating
 }) => {
-    const [rating, setRating] = useState(initialRating);
     const [tempRating, setTempRating] = useState(initialRating);
 
     return (
         <div className={className}>
             {Array.from({ length: maxRating }, (el, i) =>
-                <div key={`start + ${i}`} onClick={() => setRating(i + 1)} onMouseEnter={() => setTempRating(i + 1)} onMouseLeave={() => setTempRating(rating)}>
+                <div
+                    key={`start + ${i}`}
+                    onClick={() => initialRating === 0 && setRating(i + 1)}
+                    onMouseEnter={() => initialRating === 0 && setTempRating(i + 1)}
+                    onMouseLeave={() => initialRating === 0 && setTempRating(rating)}
+                >
                     {((i + 1) <= tempRating) && <AiFillStar />}
                     {((i + 1) > tempRating) && <AiOutlineStar />}
                 </div>

@@ -3,13 +3,13 @@ import React from 'react';
 interface ButtonProps {
     className?: string;
     text: string;
-    onClick: () => void;
+    onClick: (e?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
 const Button: React.FC<ButtonProps> = ({
     className,
     text,
-    onClick
+    onClick,
 }) => {
     return (
         <button className={className} onClick={onClick}>{text}</button>

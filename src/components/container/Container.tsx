@@ -1,7 +1,7 @@
 import React from 'react';
 import './Container.css'
-import ErrorMessage from './error/ErrorMessage';
 import Loading from './loading/Loading';
+import Message from './error/ErrorMessage';
 
 interface ContainerProps {
     children: React.ReactNode;
@@ -21,8 +21,8 @@ const Container: React.FC<ContainerProps> = ({
     const containerHeight = type === 'detail' && !height ? { height: 'fit-content' } : (type === 'list' && height && height > 0) ? { height: 'fit-content' } : { height: '100vh' }
     return (
         <div className={'cp-movie-container'} style={containerHeight}>
-            {children}
-            {error && <ErrorMessage message={error} />}
+            {!error && !isLoading && children}
+            {error && <Message message={error} />}
             {isLoading && <Loading />}
         </div>
     )

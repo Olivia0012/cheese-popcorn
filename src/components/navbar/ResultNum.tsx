@@ -1,11 +1,11 @@
 import { FC } from "react"
 
-interface ResultNum {
+interface ResultNumProps {
     className: string,
     num: number
 }
 
-const ResultNum: FC<ResultNum> = ({
+const ResultNum: FC<ResultNumProps> = ({
     className,
     num = 0
 }) => {

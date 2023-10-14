@@ -8,7 +8,8 @@ import Search from './components/navbar/Search';
 import Footer from './components/footer/Footer';
 import Container from './components/container/Container';
 import MovieDetail from './components/container/detail/MovieDetail';
-import { IMovie } from './model/IMovie';
+import { IMovie, IWatched } from './model/IMovie';
+import Watched from './components/container/watched/Watched';
 
 function App() {
   const [query, setQuery] = useState('Spider man');
@@ -20,6 +21,10 @@ function App() {
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [movie, setMovie] = useState<IMovie | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [watched, setWatched] = useState<IWatched[]>(() => {
+    const localWatched = localStorage.getItem('watched');
+    return localWatched ? JSON.parse(localWatched) : [];
+  });
 
   const fetchMovies = async () => {
     try {
@@ -52,15 +57,6 @@ function App() {
       setIsLoading(false);
     }
   }
-
-  useEffect(() => {
-    fetchMovies();
-  }, [])
-
-  useEffect(() => {
-    if (!selectedId) return;
-    fetchMovie(selectedId);
-  }, [selectedId])
 
   const fetchMovie = async (movieId: string) => {
     try {
@@ -99,6 +95,23 @@ function App() {
     setMovie(null);
   }
 
+  useEffect(() => {
+    fetchMovies();
+  }, [])
+
+  useEffect(() => {
+    handleCloseMovieDetail();
+  }, [query])
+
+  useEffect(() => {
+    if (!selectedId) return;
+    fetchMovie(selectedId);
+  }, [selectedId])
+
+  useEffect(() => {
+    localStorage.setItem('watched', JSON.stringify(watched))
+  }, [watched])
+
   return (
     <div className="App">
       <Navbar>
@@ -109,10 +122,11 @@ function App() {
 
       <div className='cp-movie-main-container'>
         <Container type={'list'} height={movies.length} error={error} isLoading={isLoading} >
-          {!error && !isLoading && <MovieList movies={movies} key={query} onClick={handleClickMovie} />}
+          <MovieList movies={movies} key={query} onClick={handleClickMovie} />
         </Container>
         <Container type={'detail'} error={movieError} isLoading={isMovieLoading}>
-          {!movieError && !isMovieLoading && movie && <MovieDetail movie={movie} onClose={handleCloseMovieDetail} />}
+          {!movie && <Watched watched={watched} setWatched={setWatched} setSelectedId={setSelectedId} />}
+          {movie && <MovieDetail movie={movie} onClose={handleCloseMovieDetail} watched={watched} setWatched={setWatched} />}
         </Container>
       </div>
       <Footer />

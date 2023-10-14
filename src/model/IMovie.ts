@@ -25,3 +25,12 @@ export interface IMovie {
   imdbRating?: string;
   imdbVotes?: string;
 }
+
+export interface IWatched {
+  rating: number;
+  imdbRating: number;
+  runtime: number;
+  poster: string;
+  title: string;
+  imdbID: string;
+}
