@@ -20,13 +20,24 @@ const MovieList: React.FC<MovieListProps> = ({
     resultNum
 }) => {
     const totalPage = Math.ceil(resultNum / 10);
+
+    const handleChangePage = (e: any, inc: boolean) => {
+        e?.stopPropagation();
+
+        if (!inc && Number(page) > 1) {
+            setPage(pre => Number(pre) - 1 + '')
+        } else if (inc && Number(page) <= totalPage - 1) {
+            setPage(pre => Number(pre) + 1 + '')
+        }
+    }
+
     return (
         <>
             <div className='cp-movie-list-header'>
                 <div className='cp-movie-list-page'>
-                    <Button className='cp-button-page' text={'<'} onClick={(e) => { e?.stopPropagation(); if (Number(page) > 1) setPage(pre => Number(pre) - 1 + '') }} />
+                    <Button className='cp-button-page' text={'<'} onClick={(e) => handleChangePage(e, false)} />
                     <span><input value={page} onChange={(e) => setPage(e.currentTarget.value)} className='cp-movie-list-page-input' /> / {totalPage}</span>
-                    <Button className='cp-button-page' text={'>'} onClick={(e) => { e?.stopPropagation(); console.log(page); if (Number(page) <= totalPage - 1) setPage(pre => Number(pre) + 1 + '') }} />
+                    <Button className='cp-button-page' text={'>'} onClick={(e) => handleChangePage(e, true)} />
                 </div>
                 <Button className='cp-button-back' text={'-'} onClick={(e) => { e?.stopPropagation(); setActive('watched') }} />
             </div>

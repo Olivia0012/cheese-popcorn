@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Navbar from './components/navbar/Navbar';
 import Logo from './components/navbar/Logo';
@@ -10,25 +10,27 @@ import Container from './components/container/Container';
 import MovieDetail from './components/container/detail/MovieDetail';
 import { ActiveType, IMovie, IWatched } from './model/IMovie';
 import Watched from './components/container/watched/Watched';
+import { useWindowWide } from './hooks/useWindowWidth';
+import { useLocalStorageState } from './hooks/useLocalStorageState';
+import { useKey } from './hooks/useKey';
 
 function App() {
   const [query, setQuery] = useState('Spider man');
+  const [page, setPage] = useState('1');
+
+  const [movies, setMovies] = useState<IMovie[]>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [resultNum, setResultNum] = useState(0);
+
   const [movieError, setMovieError] = useState('');
   const [isMovieLoading, setIsMovieLoading] = useState(false);
-  const [resultNum, setResultNum] = useState(0);
-  const [movies, setMovies] = useState<IMovie[]>([]);
   const [movie, setMovie] = useState<IMovie | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [page, setPage] = useState('1');
-  const [watched, setWatched] = useState<IWatched[]>(() => {
-    const localWatched = localStorage.getItem('watched');
-    return localWatched ? JSON.parse(localWatched) : [];
-  });
 
+  const [watched, setWatched] = useLocalStorageState<IWatched>([], 'watched');
   const [active, setActive] = useState<ActiveType>('list');
-
+  const searchInput: React.Ref<HTMLInputElement> = useRef(null);
 
   const fetchMovies = async () => {
     try {
@@ -40,11 +42,13 @@ function App() {
         return;
       }
 
-      const res = await fetch(`https://www.omdbapi.com/?apikey=7ad09941&s=${query}&page=${page}`);
+      const res = await fetch(
+        `https://www.omdbapi.com/?apikey=7ad09941&s=${query}&page=${page}`
+      );
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error('Error occurs when fetching movies.')
+        throw new Error('Error occurs when fetching movies.');
       }
 
       if (data.Response === 'False') {
@@ -53,14 +57,16 @@ function App() {
       }
 
       setMovies(data.Search);
+      console.log(data.Search)
       setError('');
       setResultNum(data.totalResults);
+      return { movies, error, isLoading, resultNum };
     } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const fetchMovie = async (movieId: string) => {
     try {
@@ -101,14 +107,27 @@ function App() {
     setActive('watched')
   }
 
+  useKey('Escape', handleCloseMovieDetail);
+  useKey('Enter', function () {
+    if (document.activeElement === searchInput.current) return;
+
+    searchInput.current?.focus();
+    setQuery(pre => '');
+  });
+
   useEffect(() => {
     fetchMovies();
     setActive('list')
-  }, [])
+  }, [page])
 
   useEffect(() => {
     setMovie(null);
   }, [query])
+
+  useEffect(() => {
+    fetchMovies();
+    setActive('list')
+  }, [])
 
   useEffect(() => {
     if (!selectedId) return;
@@ -116,35 +135,13 @@ function App() {
     setActive('detail')
   }, [selectedId])
 
-  useEffect(() => {
-    localStorage.setItem('watched', JSON.stringify(watched))
-  }, [watched])
-
-  const useWindowWide = () => {
-    const [width, setWidth] = useState(0)
-
-    useEffect(() => {
-      function handleResize() {
-        setWidth(window.innerWidth)
-      }
-
-      window.addEventListener("resize", handleResize)
-
-      handleResize()
-
-      return () => {
-        window.removeEventListener("resize", handleResize)
-      }
-    }, [setWidth])
-
-    return width
-  }
+  console.log(active)
 
   return (
     <div className="App">
       <Navbar>
         <Logo />
-        <Search query={query} setQuery={setQuery} text={'Search'} onClick={handleClick} />
+        <Search query={query} setQuery={setQuery} text={'Search'} onClick={handleClick} searchInput={searchInput} />
         <ResultNum className='cp-result-num' num={resultNum} />
       </Navbar>
 

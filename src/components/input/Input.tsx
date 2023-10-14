@@ -4,14 +4,17 @@ interface InputProps {
     className?: string;
     query?: string;
     setQuery: (e: string) => void;
+    searchInput?: React.Ref<HTMLInputElement>
 }
 
 const Input: React.FC<InputProps> = ({
     className,
     query,
-    setQuery
+    setQuery,
+    searchInput
 }) => {
     const [value, setValue] = useState(query);
+    console.log(query, 'inside input')
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
@@ -20,7 +23,7 @@ const Input: React.FC<InputProps> = ({
     }
 
     return (
-        <input type='text' aria-label="generic-input" value={value} onChange={handleChange} className={className} />
+        <input type='text' aria-label="generic-input" value={value} onChange={handleChange} className={className} ref={searchInput} />
     )
 }
 

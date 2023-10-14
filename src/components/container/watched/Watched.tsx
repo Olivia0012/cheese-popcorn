@@ -46,7 +46,7 @@ const Watched: React.FC<WatchedProps> = ({
                     <p><span>#️⃣ </span>{watchedNum} movies</p>
                     <p><span>⭐️  </span>{avgRating}</p>
                     <p><span>🌟  </span>{avgIMDBRating}</p>
-                    <p><span>⏱ </span>{avgRuntime} movies</p>
+                    <p><span>⏱ </span>{avgRuntime} mins</p>
                 </div>
 
             </div>
