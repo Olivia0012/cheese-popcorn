@@ -1,13 +1,13 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useRef } from 'react'
 import Input from '../input/Input'
 import Button from '../button/Button'
+import { useKey } from '../../hooks/useKey';
 
 interface SearchProps {
     query: string;
     setQuery: Dispatch<SetStateAction<string>>;
     text: string;
     onClick: () => void;
-    searchInput: React.Ref<HTMLInputElement>
 }
 
 const Search: React.FC<SearchProps> = ({
@@ -15,8 +15,16 @@ const Search: React.FC<SearchProps> = ({
     setQuery,
     text,
     onClick,
-    searchInput
 }) => {
+    const searchInput: React.Ref<HTMLInputElement> = useRef(null);
+
+    useKey('Enter', function () {
+        if (document.activeElement === searchInput.current!) return;
+
+        searchInput.current?.focus();
+        setQuery(pre => '');
+    });
+
     return (
         <div className='cp-search'>
             <Input query={query} setQuery={setQuery} className='cp-search-input' searchInput={searchInput} />
