@@ -91,7 +91,7 @@ const MovieList: React.FC<MovieListProps> = ({
 
     return (
         <Container type={'list'} height={movies?.length} error={error} isLoading={isLoading} >
-            {(useWindowWide() > 800 || active === 'list') && status === StatusType.READY &&
+            {(useWindowWide() > 769 || active === 'list') && status === StatusType.READY &&
                 <>
                     <MovieListHeader
                         resultNum={movieNumber}
