@@ -3,7 +3,9 @@ import './Watched.css'
 import Button from '../../button/Button';
 import { IWatched } from '../../../model/IMovie';
 import Message from '../error/Message';
-import { ActionType, IAction } from '../../../reducer/Reducer';
+import { IAction } from '../../../reducer/Reducer';
+import { useActive } from '../../../context/ActiveContext';
+import { useSelectedMovie } from '../../../context/SelectedMovieContext';
 
 interface WatchedListProps {
     watched: IWatched[];
@@ -41,11 +43,12 @@ const WatchedSummary = ({
     avgRuntime,
     activeDispatch
 }: WatchedSummaryProps) => {
+    const { setActive } = useActive();
     return (
         <div className='cp-watched-header'>
             <div className='cp-watched-header-title'>
                 <h3>MOVIES WATCHED </h3>
-                <Button className='cp-button-back' text={'-'} onClick={(e) => { e?.stopPropagation(); activeDispatch({ type: ActionType.SET_ACTIVE, active: 'list' }) }} />
+                <Button className='cp-button-back' text={'-'} onClick={(e) => { e?.stopPropagation(); setActive('list') }} />
             </div>
             <div className='cp-watched-summary'>
                 <p><span>#️⃣ </span>{watchedNum} movies</p>
@@ -62,8 +65,9 @@ const WatchedMovie = ({
     activeDispatch,
     handleRemoveWatched
 }: WatchedMoviePros) => {
+    const { setSelectedId } = useSelectedMovie();
     return (
-        <div className='cp-watched-item' key={watchedMovie.imdbID} onClick={() => activeDispatch({ type: ActionType.FETCH_MOVIE, selectedId: watchedMovie.imdbID })}>
+        <div className='cp-watched-item' key={watchedMovie.imdbID} onClick={() => setSelectedId(watchedMovie.imdbID)}>
             <img src={watchedMovie.poster} alt={watchedMovie.poster} className='cp-watched-img' />
             <div className='cp-watched-text'>
                 <h4>{watchedMovie.title}</h4>
@@ -74,7 +78,7 @@ const WatchedMovie = ({
                 </div>
             </div>
             <Button className='cp-watched-delete' text={'X'} onClick={(e) => { e?.stopPropagation(); handleRemoveWatched(watchedMovie) }} />
-        </div>
+        </div >
     )
 }
 
@@ -91,7 +95,7 @@ const WatchedList = ({
         <div className='cp-watched-container'>
             {watched.length === 0 && <Message message={`No watched movie yet, please rate a movie.`} className='cp-no-watched-message' />}
             {watched.map((ele) =>
-                <WatchedMovie watchedMovie={ele} handleRemoveWatched={handleRemoveWatched} activeDispatch={activeDispatch} />
+                <WatchedMovie key={ele.imdbID} watchedMovie={ele} handleRemoveWatched={handleRemoveWatched} activeDispatch={activeDispatch} />
             )}
         </div>
     )

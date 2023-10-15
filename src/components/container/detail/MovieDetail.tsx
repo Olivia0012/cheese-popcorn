@@ -5,7 +5,8 @@ import './MovieDetail.css'
 import Button from '../../button/Button'
 import Message from '../error/Message'
 import { useKey } from '../../../hooks/useKey'
-import { ActionType, IAction } from '../../../reducer/Reducer'
+import { useActive } from '../../../context/ActiveContext'
+import { useSelectedMovie } from '../../../context/SelectedMovieContext'
 
 interface MovieDetailProps {
     rating: number;
@@ -14,7 +15,6 @@ interface MovieDetailProps {
     setWatched: React.Dispatch<React.SetStateAction<IWatched[]>>;
     hasWatched: IWatched | undefined;
     movie: IMovie,
-    activeDispatch: React.Dispatch<IAction>;
 }
 
 interface DetailSummaryProps {
@@ -98,10 +98,13 @@ const MovieDetail: React.FC<MovieDetailProps> = ({
     watched,
     setWatched,
     movie,
-    activeDispatch
 }) => {
+    const { setActive } = useActive();
+    const { setSelectedId } = useSelectedMovie();
+
     const handleCloseMovieDetail = () => {
-        activeDispatch({ type: ActionType.RESET_MOVIE, selectedId: undefined, active: 'watched' })
+        setSelectedId(undefined);
+        setActive('watched')
     }
 
     useKey('Escape', handleCloseMovieDetail);

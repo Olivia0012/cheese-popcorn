@@ -3,36 +3,37 @@ import { IMovie } from '../../../model/IMovie'
 import Button from '../../button/Button'
 import Container from '../Container';
 import { useWindowWide } from '../../../hooks/useWindowWidth';
-import { ActionType, IAction, IState, StatusType } from '../../../reducer/Reducer';
+import { IAction, IState, StatusType } from '../../../reducer/Reducer';
+import { useActive } from '../../../context/ActiveContext';
+import { useSelectedMovie } from '../../../context/SelectedMovieContext';
+import { useFetchMovies } from '../../../context/MoviesContext';
 
 interface MovieListProps {
     dispatch: React.Dispatch<IAction>;
     state: IState;
-    setPage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface MovieListHeaderProps {
-    page: string | undefined;
-    setPage: React.Dispatch<React.SetStateAction<string>>;
     resultNum: number;
-    dispatch: React.Dispatch<IAction>;
 }
 
 const MovieListHeader = ({
-    page,
-    setPage,
     resultNum,
-    dispatch
 }: MovieListHeaderProps) => {
+    const { setActive } = useActive();
     const totalPage = Math.ceil(resultNum / 10);
+    const { page, setPage } = useFetchMovies();
+
     const handleChangePage = (e: any, inc: boolean) => {
         e?.stopPropagation();
+        let newPage = '';
 
         if (!inc && Number(page) > 1) {
-            setPage(pre => Number(pre) - 1 + '')
+            newPage = Number(page) - 1 + '';
         } else if (inc && Number(page) <= totalPage - 1) {
-            setPage(pre => Number(pre) + 1 + '')
+            newPage = Number(page) + 1 + '';
         }
+        setPage(newPage);
     }
 
     return (
@@ -42,22 +43,23 @@ const MovieListHeader = ({
                 <span><input value={page} onChange={(e) => setPage(e.currentTarget.value)} className='cp-movie-list-page-input' /> / {totalPage}</span>
                 <Button className='cp-button-page' text={'>'} onClick={(e) => handleChangePage(e, true)} />
             </div>
-            <Button className='cp-button-back' text={'-'} onClick={(e) => { e?.stopPropagation(); dispatch({ type: ActionType.SET_ACTIVE, active: 'watched' }) }} />
+            <Button className='cp-button-back' text={'-'} onClick={(e) => { e?.stopPropagation(); setActive('watched') }} />
         </div>
     )
 }
 
 const Movies = ({
     movies,
-    dispatch
 }: {
     movies: IMovie[],
     dispatch: React.Dispatch<IAction>;
 }) => {
+    const { setActive } = useActive();
+    const { setSelectedId } = useSelectedMovie();
     return (
         <>
             {movies.map((movie: IMovie) => (
-                <div key={movie.imdbID} className='cp-movie-box' onClick={() => dispatch({ type: ActionType.FETCH_MOVIE, selectedId: movie.imdbID, active: 'detail' })}>
+                <div key={movie.imdbID} className='cp-movie-box' onClick={() => { setSelectedId(movie.imdbID); setActive('detail') }}>
                     <div className='cp-movie-item'>
                         <img src={movie.Poster} alt={movie.Title} className='cp-movie-img' />
                         <div className='cp-movie-text'>
@@ -70,63 +72,21 @@ const Movies = ({
             ))}
         </>
     )
-
 }
 
 const MovieList: React.FC<MovieListProps> = ({
-    setPage,
     dispatch,
-    state
+    state,
 }) => {
-    const { movies, error, isLoading, status, query, page, active, resultNum } = state;
+    const { movies, error, isLoading, status, resultNum } = state;
     const movieNumber = resultNum || 0;
-
-    const fetchMovies = async () => {
-        try {
-            dispatch({ type: ActionType.LOADING })
-
-            if (query!.length < 4) {
-                return;
-            }
-
-            const res = await fetch(
-                `https://www.omdbapi.com/?apikey=7ad09941&s=${query}&page=${page}`
-            );
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error('Error occurs when fetching movies.');
-            }
-
-            if (data.Response === 'False') {
-                dispatch({ type: ActionType.ERROR, error: data.Error })
-                return;
-            }
-            console.log(data.totalResults)
-            dispatch({
-                type: ActionType.MOVIES_RECEIVED,
-                resultNum: Number(data.totalResults),
-                payload: {
-                    movies: data.Search,
-                },
-                active: 'list',
-                error: ''
-            })
-        } catch (err: any) {
-            dispatch({ type: ActionType.ERROR, error: err.message })
-        } finally {
-            dispatch({
-                type: ActionType.FINISHED,
-            })
-        }
-    };
+    const { active } = useActive();
+    const { setSelectedId, setMovie } = useSelectedMovie();
+    const { query } = useFetchMovies();
 
     useEffect(() => {
-        fetchMovies();
-    }, [page])
-
-    useEffect(() => {
-        dispatch({ type: ActionType.RESET_MOVIE })
+        setSelectedId(undefined);
+        setMovie(undefined);
     }, [query])
 
     return (
@@ -134,10 +94,7 @@ const MovieList: React.FC<MovieListProps> = ({
             {(useWindowWide() > 800 || active === 'list') && status === StatusType.READY &&
                 <>
                     <MovieListHeader
-                        page={page}
-                        setPage={setPage}
                         resultNum={movieNumber}
-                        dispatch={dispatch}
                     />
 
                     {movies && <Movies

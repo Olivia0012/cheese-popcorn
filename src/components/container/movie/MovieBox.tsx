@@ -1,17 +1,17 @@
-import { ActiveType, IWatched } from '../../../model/IMovie'
+import { IWatched } from '../../../model/IMovie'
 import { useEffect, useReducer, useState } from 'react'
 import { ActionType, IAction, StatusType, fetchMovieReducer } from '../../../reducer/Reducer'
 import Container from '../Container'
 import Watched from '../watched/Watched'
 import { useKey } from '../../../hooks/useKey'
 import MovieDetail from '../detail/MovieDetail'
+import { useActive } from '../../../context/ActiveContext'
+import { useSelectedMovie } from '../../../context/SelectedMovieContext'
 
 interface MovieDetailProps {
-    selectedId?: string;
     watched: IWatched[];
     setWatched: React.Dispatch<React.SetStateAction<IWatched[]>>;
     activeDispatch: React.Dispatch<IAction>;
-    active: ActiveType;
 }
 
 const initialState = {
@@ -23,14 +23,14 @@ const initialState = {
 
 const MovieBox: React.FC<MovieDetailProps> = ({
     activeDispatch,
-    selectedId,
     watched,
     setWatched,
-    active
 }) => {
     const [rating, setRating] = useState(0);
+    const { selectedId, setSelectedId, setMovie } = useSelectedMovie();
     const hasWatched = watched.find(watchedMovied => selectedId === watchedMovied.imdbID);
-    const [{ movie, error, isLoading }, dispatch] = useReducer(fetchMovieReducer, initialState)
+    const [{ movie, error, isLoading }, dispatch] = useReducer(fetchMovieReducer, initialState);
+    const { active, setActive } = useActive();
 
     const fetchMovie = async (movieId: string) => {
         try {
@@ -44,7 +44,7 @@ const MovieBox: React.FC<MovieDetailProps> = ({
             }
 
             if (data.Response === 'False') {
-                dispatch({ type: ActionType.ERROR, error: data.Error });
+                dispatch({ type: ActionType.ERROR, payload: { error: data.Error } });
                 return;
             }
 
@@ -52,11 +52,11 @@ const MovieBox: React.FC<MovieDetailProps> = ({
                 type: ActionType.MOVIE_RECEIVED,
                 payload: {
                     movie: data,
+                    error: ''
                 },
-                error: ''
             })
         } catch (err: any) {
-            dispatch({ type: ActionType.ERROR, error: err.message })
+            dispatch({ type: ActionType.ERROR, payload: { error: err.message } })
         } finally {
             dispatch({
                 type: ActionType.FINISHED,
@@ -65,16 +65,17 @@ const MovieBox: React.FC<MovieDetailProps> = ({
     }
 
     const handleCloseMovieDetail = () => {
-        activeDispatch({ type: ActionType.RESET_MOVIE, active: 'watched' })
+        setSelectedId(undefined);
+        setMovie(undefined);
+        setActive('watched');
     }
 
     useKey('Escape', handleCloseMovieDetail);
 
     useEffect(() => {
-        console.log(selectedId)
         if (!selectedId) return;
         fetchMovie(selectedId);
-        activeDispatch({ type: ActionType.SET_ACTIVE, active: 'detail' })
+        setActive('detail');
     }, [selectedId])
 
     return (
@@ -92,7 +93,6 @@ const MovieBox: React.FC<MovieDetailProps> = ({
                     setRating={setRating}
                     watched={watched}
                     setWatched={setWatched}
-                    activeDispatch={activeDispatch}
                     hasWatched={hasWatched}
                     movie={movie}
                 />

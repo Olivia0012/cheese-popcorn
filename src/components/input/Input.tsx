@@ -14,7 +14,6 @@ const Input: React.FC<InputProps> = ({
     searchInput
 }) => {
     const [value, setValue] = useState(query);
-    console.log(query, 'inside input')
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
