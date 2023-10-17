@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ActiveProvider } from './context/ActiveContext';
+import { MoviesProvider } from './context/MoviesContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ActiveProvider>
-      <App />
+      <MoviesProvider>
+        <App />
+      </MoviesProvider>
     </ActiveProvider>
   </React.StrictMode>
 );

@@ -5,52 +5,54 @@ import './MovieDetail.css'
 import Button from '../../button/Button'
 import Message from '../error/Message'
 import { useKey } from '../../../hooks/useKey'
+import { useState } from 'react'
 import { useActive } from '../../../context/ActiveContext'
-import { useSelectedMovie } from '../../../context/SelectedMovieContext'
+import { useMovies } from '../../../context/MoviesContext'
 
 interface MovieDetailProps {
-    rating: number;
-    setRating: React.Dispatch<React.SetStateAction<number>>;
     watched: IWatched[];
     setWatched: React.Dispatch<React.SetStateAction<IWatched[]>>;
     hasWatched: IWatched | undefined;
-    movie: IMovie,
 }
 
-interface DetailSummaryProps {
+export interface DetailSummaryProps {
     movie: IMovie;
     handleCloseMovieDetail: () => void
 }
 
-interface CPRatingProps {
+export interface CPRatingProps {
     hasWatched: IWatched | undefined,
     rating: number,
     setRating: React.Dispatch<React.SetStateAction<number>>;
     handleAddWatched: () => void
 }
 
-const DetailSummary = ({
-    movie,
-    handleCloseMovieDetail
-}: DetailSummaryProps) => {
+export const DetailSummary = () => {
+    const { setActive } = useActive();
+    const { setSelectedId, movie } = useMovies();
+
+    const handleCloseMovieDetail = () => {
+        setSelectedId(undefined);
+        setActive('watched')
+    }
     return (
         <header>
-            <button className='cp-movie-detail-back' onClick={handleCloseMovieDetail}><BiArrowBack style={{ marginTop: '5px' }} /></button>
-            <img src={movie.Poster} alt={movie.Title} className="cp-movie-detial-img" />
+            <button data-testid='btn-back' className='cp-movie-detail-back' onClick={handleCloseMovieDetail}><BiArrowBack style={{ marginTop: '5px' }} /></button>
+            <img src={movie?.Poster} alt={movie?.Title} className="cp-movie-detial-img" />
             <div className="cp-movie-detail-overview">
-                <h2>{movie.Title}</h2>
-                <p>{movie.Released} &bull; {movie.Runtime}</p>
-                <p>{movie.Genre}</p>
+                <h2>{movie?.Title}</h2>
+                <p>{movie?.Released} &bull; {movie?.Runtime}</p>
+                <p>{movie?.Genre}</p>
                 <p>
                     <span>⭐️  </span>
-                    {movie.imdbRating}   IMDB Rating
+                    {movie?.imdbRating}   IMDB Rating
                 </p>
             </div>
         </header>
     )
 }
 
-const CPRating = ({
+export const CPRating = ({
     hasWatched,
     rating,
     setRating,
@@ -58,26 +60,27 @@ const CPRating = ({
 }: CPRatingProps) => {
     return (
         <div className='cp-movie-rating-box'>
-            <StarRating maxRating={10} className='cp-movie-detail-rating' initialRating={hasWatched?.rating} rating={rating} setRating={setRating} />
+            <StarRating maxRating={10} className='cp-movie-detail-rating' initialRating={hasWatched?.rating} rating={rating} setRating={setRating} data-testid="star-rating" />
             {!hasWatched && <Button text={'+ ADD TO WATCHED'} onClick={handleAddWatched} className='cp-movie-detail-add-watched' />}
             {hasWatched && <Message message={'You have watched this movie.'} />}
         </div>
     )
 }
 
-const DetailContent = ({ movie }: { movie: IMovie }) => {
+const DetailContent = () => {
+    const { movie } = useMovies();
     return (
         <section>
-            <p><em>{movie.Plot}</em></p>
-            <p><strong>Actors: </strong>{movie.Actors}</p>
-            <p><strong>Directed by: </strong>{movie.Director}</p>
-            <p><strong>Awards: </strong>{movie.Awards}</p>
-            <p><strong>Country: </strong>{movie.Country}</p>
-            <p><strong>Rated: </strong>{movie.Rated}</p>
+            <p><em>{movie?.Plot}</em></p>
+            <p><strong>Actors: </strong>{movie?.Actors}</p>
+            <p><strong>Directed by: </strong>{movie?.Director}</p>
+            <p><strong>Awards: </strong>{movie?.Awards}</p>
+            <p><strong>Country: </strong>{movie?.Country}</p>
+            <p><strong>Rated: </strong>{movie?.Rated}</p>
             <div>
                 <strong>Ratings: </strong>
                 <ul>
-                    {movie.Ratings?.map((m) =>
+                    {movie?.Ratings?.map((m) =>
                         <li key={m.Source}>
                             <p>
                                 <strong>{m.Source}: </strong>
@@ -92,19 +95,18 @@ const DetailContent = ({ movie }: { movie: IMovie }) => {
 }
 
 const MovieDetail: React.FC<MovieDetailProps> = ({
-    rating,
-    setRating,
     hasWatched,
     watched,
-    setWatched,
-    movie,
+    setWatched
 }) => {
+    const [rating, setRating] = useState(0);
     const { setActive } = useActive();
-    const { setSelectedId } = useSelectedMovie();
+    const { setSelectedId, movie, setMovie } = useMovies();
 
     const handleCloseMovieDetail = () => {
         setSelectedId(undefined);
-        setActive('watched')
+        setMovie(undefined);
+        setActive('watched');
     }
 
     useKey('Escape', handleCloseMovieDetail);
@@ -125,10 +127,7 @@ const MovieDetail: React.FC<MovieDetailProps> = ({
 
     return (
         <div className="cp-movie-detail-container">
-            <DetailSummary
-                movie={movie}
-                handleCloseMovieDetail={handleCloseMovieDetail}
-            />
+            <DetailSummary />
 
             <CPRating
                 hasWatched={hasWatched}
@@ -137,7 +136,7 @@ const MovieDetail: React.FC<MovieDetailProps> = ({
                 setRating={setRating}
             />
 
-            <DetailContent movie={movie} />
+            <DetailContent />
         </div >
     )
 }

@@ -3,18 +3,12 @@ import './Watched.css'
 import Button from '../../button/Button';
 import { IWatched } from '../../../model/IMovie';
 import Message from '../error/Message';
-import { IAction } from '../../../reducer/Reducer';
 import { useActive } from '../../../context/ActiveContext';
-import { useSelectedMovie } from '../../../context/SelectedMovieContext';
+import { useMovies } from '../../../context/MoviesContext';
 
 interface WatchedListProps {
     watched: IWatched[];
     setWatched: React.Dispatch<React.SetStateAction<IWatched[]>>;
-    activeDispatch: React.Dispatch<IAction>;
-}
-
-interface WatchedProps extends WatchedListProps {
-    activeDispatch: React.Dispatch<IAction>;
 }
 
 interface WatchedSummaryProps {
@@ -22,12 +16,10 @@ interface WatchedSummaryProps {
     avgRating: string;
     avgIMDBRating: string;
     avgRuntime: string;
-    activeDispatch: React.Dispatch<IAction>;
 }
 
 interface WatchedMoviePros {
     watchedMovie: IWatched,
-    activeDispatch: React.Dispatch<IAction>;
     handleRemoveWatched: (watchedMovie: IWatched) => void,
 }
 
@@ -41,7 +33,6 @@ const WatchedSummary = ({
     avgRating,
     avgIMDBRating,
     avgRuntime,
-    activeDispatch
 }: WatchedSummaryProps) => {
     const { setActive } = useActive();
     return (
@@ -62,12 +53,13 @@ const WatchedSummary = ({
 
 const WatchedMovie = ({
     watchedMovie,
-    activeDispatch,
     handleRemoveWatched
 }: WatchedMoviePros) => {
-    const { setSelectedId } = useSelectedMovie();
+    const { setSelectedId } = useMovies();
+    const { setActive } = useActive();
+
     return (
-        <div className='cp-watched-item' key={watchedMovie.imdbID} onClick={() => setSelectedId(watchedMovie.imdbID)}>
+        <div className='cp-watched-item' key={watchedMovie.imdbID} onClick={() => { setSelectedId(watchedMovie.imdbID); setActive('detail') }}>
             <img src={watchedMovie.poster} alt={watchedMovie.poster} className='cp-watched-img' />
             <div className='cp-watched-text'>
                 <h4>{watchedMovie.title}</h4>
@@ -84,7 +76,6 @@ const WatchedMovie = ({
 
 const WatchedList = ({
     watched,
-    activeDispatch,
     setWatched
 }: WatchedListProps) => {
     const handleRemoveWatched = (movie: IWatched) => {
@@ -95,16 +86,15 @@ const WatchedList = ({
         <div className='cp-watched-container'>
             {watched.length === 0 && <Message message={`No watched movie yet, please rate a movie.`} className='cp-no-watched-message' />}
             {watched.map((ele) =>
-                <WatchedMovie key={ele.imdbID} watchedMovie={ele} handleRemoveWatched={handleRemoveWatched} activeDispatch={activeDispatch} />
+                <WatchedMovie key={ele.imdbID} watchedMovie={ele} handleRemoveWatched={handleRemoveWatched} />
             )}
         </div>
     )
 }
 
-const Watched: React.FC<WatchedProps> = ({
+const Watched: React.FC<WatchedListProps> = ({
     watched,
     setWatched,
-    activeDispatch
 }) => {
     const avgRating = average(watched.map((el) => Number(el.rating))).toFixed(1);
     const avgIMDBRating = average(watched.map((el) => Number(el.imdbRating))).toFixed(1);
@@ -117,11 +107,9 @@ const Watched: React.FC<WatchedProps> = ({
                 avgRating={avgRating}
                 avgIMDBRating={avgIMDBRating}
                 avgRuntime={avgRuntime}
-                activeDispatch={activeDispatch}
             />
             <WatchedList
                 watched={watched}
-                activeDispatch={activeDispatch}
                 setWatched={setWatched}
             />
         </ >

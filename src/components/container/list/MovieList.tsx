@@ -1,17 +1,9 @@
-import React, { useEffect } from 'react'
 import { IMovie } from '../../../model/IMovie'
 import Button from '../../button/Button'
 import Container from '../Container';
 import { useWindowWide } from '../../../hooks/useWindowWidth';
-import { IAction, IState, StatusType } from '../../../reducer/Reducer';
 import { useActive } from '../../../context/ActiveContext';
-import { useSelectedMovie } from '../../../context/SelectedMovieContext';
-import { useFetchMovies } from '../../../context/MoviesContext';
-
-interface MovieListProps {
-    dispatch: React.Dispatch<IAction>;
-    state: IState;
-}
+import { useMovies } from '../../../context/MoviesContext';
 
 interface MovieListHeaderProps {
     resultNum: number;
@@ -22,7 +14,7 @@ const MovieListHeader = ({
 }: MovieListHeaderProps) => {
     const { setActive } = useActive();
     const totalPage = Math.ceil(resultNum / 10);
-    const { page, setPage } = useFetchMovies();
+    const { page, setPage } = useMovies();
 
     const handleChangePage = (e: any, inc: boolean) => {
         e?.stopPropagation();
@@ -52,10 +44,9 @@ const Movies = ({
     movies,
 }: {
     movies: IMovie[],
-    dispatch: React.Dispatch<IAction>;
 }) => {
     const { setActive } = useActive();
-    const { setSelectedId } = useSelectedMovie();
+    const { setSelectedId } = useMovies();
     return (
         <>
             {movies.map((movie: IMovie) => (
@@ -74,33 +65,20 @@ const Movies = ({
     )
 }
 
-const MovieList: React.FC<MovieListProps> = ({
-    dispatch,
-    state,
-}) => {
-    const { movies, error, isLoading, status, resultNum } = state;
+const MovieList = () => {
+    const { movies, error, isLoading, resultNum } = useMovies();
     const movieNumber = resultNum || 0;
     const { active } = useActive();
-    const { setSelectedId, setMovie } = useSelectedMovie();
-    const { query } = useFetchMovies();
-
-    useEffect(() => {
-        setSelectedId(undefined);
-        setMovie(undefined);
-    }, [query])
 
     return (
         <Container type={'list'} height={movies?.length} error={error} isLoading={isLoading} >
-            {(useWindowWide() > 769 || active === 'list') && status === StatusType.READY &&
+            {(useWindowWide() > 769 || active === 'list') &&
                 <>
                     <MovieListHeader
                         resultNum={movieNumber}
                     />
 
-                    {movies && <Movies
-                        movies={movies}
-                        dispatch={dispatch} />
-                    }
+                    {movies && <Movies movies={movies} />}
                 </>
             }
         </Container >

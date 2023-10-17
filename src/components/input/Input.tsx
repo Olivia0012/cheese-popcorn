@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 interface InputProps {
     className?: string;
@@ -13,16 +13,13 @@ const Input: React.FC<InputProps> = ({
     setQuery,
     searchInput
 }) => {
-    const [value, setValue] = useState(query);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-
-        setValue(e.currentTarget.value);
         setQuery(e.currentTarget.value);
     }
 
     return (
-        <input type='text' aria-label="generic-input" value={value} onChange={handleChange} className={className} ref={searchInput} />
+        <input type='text' aria-label="generic-input" value={query} onChange={handleChange} className={className} ref={searchInput} />
     )
 }
 

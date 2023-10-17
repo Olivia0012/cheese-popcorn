@@ -5,11 +5,12 @@ export enum ActionType {
   ADD_WATCHED,
   DELETE_WATCHED,
   MOVIES_RECEIVED,
+  MOVIES_NUMBER,
+  MOVIE_SELECTED,
   MOVIE_RECEIVED,
   ERROR,
   FINISHED,
   LOADING,
-  INIT,
 }
 
 export enum StatusType {
@@ -21,24 +22,18 @@ export enum StatusType {
 }
 
 export interface IState {
-  status: StatusType;
   isLoading: boolean;
   movies?: IMovie[];
   movie?: IMovie;
   watched?: IWatched[];
+  selectedId?: string;
   error?: string;
   resultNum?: number;
 }
 
 export interface IAction {
   type: ActionType;
-  payload?: {
-    movies?: IMovie[];
-    movie?: IMovie;
-    watched?: IWatched[];
-    resultNum?: number;
-    error?: string;
-  };
+  payload?: IMovie[] | IMovie | IWatched[] | number | string;
 }
 
 export function reducer(state: IState, action: IAction): IState {
@@ -47,31 +42,40 @@ export function reducer(state: IState, action: IAction): IState {
       return {
         ...state,
         isLoading: true,
-        error: '',
+        error: undefined,
         movies: [],
+        selectedId: undefined,
+        movie: undefined,
       };
     case ActionType.MOVIES_RECEIVED:
       return {
         ...state,
-        movies: action.payload?.movies,
-        resultNum: action.payload?.resultNum,
-        status: StatusType.READY,
+        movies: action.payload as IMovie[],
+      };
+    case ActionType.MOVIES_NUMBER:
+      return {
+        ...state,
+        resultNum: action.payload as number,
+      };
+    case ActionType.MOVIE_SELECTED:
+      return {
+        ...state,
+        selectedId: action.payload as string,
       };
     case ActionType.MOVIE_RECEIVED:
       return {
         ...state,
-        movies: action.payload?.movies,
-        status: StatusType.READY,
+        movie: action.payload as IMovie,
       };
     case ActionType.ADD_WATCHED:
       return {
         ...state,
-        watched: action.payload?.watched,
+        watched: action.payload as IWatched[],
       };
     case ActionType.DELETE_WATCHED:
       return {
         ...state,
-        watched: action.payload?.watched,
+        watched: action.payload as IWatched[],
       };
     case ActionType.FINISHED:
       return {
@@ -81,49 +85,9 @@ export function reducer(state: IState, action: IAction): IState {
     case ActionType.ERROR:
       return {
         ...state,
-        error: action.payload?.error,
+        error: action.payload as string,
       };
     default:
       throw new Error('Action is unknown!');
-  }
-}
-
-export function fetchMovieReducer(state: IState, action: IAction): IState {
-  switch (action.type) {
-    case ActionType.LOADING:
-      return {
-        ...state,
-        isLoading: true,
-        error: '',
-        movies: [],
-      };
-    case ActionType.MOVIE_RECEIVED:
-      return {
-        ...state,
-        movie: action.payload?.movie,
-        status: StatusType.READY,
-      };
-    case ActionType.ADD_WATCHED:
-      return {
-        ...state,
-        watched: action.payload?.watched,
-      };
-    case ActionType.DELETE_WATCHED:
-      return {
-        ...state,
-        watched: action.payload?.watched,
-      };
-    case ActionType.FINISHED:
-      return {
-        ...state,
-        isLoading: false,
-      };
-    case ActionType.ERROR:
-      return {
-        ...state,
-        error: action.payload?.error,
-      };
-    default:
-      throw new Error('Action is unknown!--');
   }
 }
